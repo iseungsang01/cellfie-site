@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Cellfie</title>
+<meta content="셀카 한 장으로 피부를 기록하고, 기록에서 맞는 화장품을 찾는 AI 피부 코치 Cellfie" data-content-en="Cellfie turns one selfie into a skin record, and finds the skincare that actually works for you from that record." name="description"/>
+<link href="assets/icon.png" rel="icon"/>
+
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet"/>
+<link href="site.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="gnb" id="gnb">
+<div class="inner">
+<a class="logo" href="#top"><img alt="" src="assets/icon.png"/>Cellfie</a>
+<nav aria-label="주요 메뉴" data-aria-label-en="Main">
+<a href="#service"><span data-l="ko">서비스</span><span data-l="en">Features</span></a>
+<a href="#why"><span data-l="ko">비교</span><span data-l="en">Compare</span></a>
+<a href="#news"><span data-l="ko">뉴스룸</span><span data-l="en">News</span></a>
+<a href="#privacy"><span data-l="ko">개인정보 원칙</span><span data-l="en">Privacy</span></a>
+<a href="#contact"><span data-l="ko">제휴 문의</span><span data-l="en">Partnership</span></a>
+</nav>
+<div aria-label="Language" class="lang"><button data-set-lang="ko" type="button">KR</button><button data-set-lang="en" type="button">EN</button></div>
+<button aria-expanded="false" aria-label="메뉴" class="menu" data-aria-label-en="Menu" id="menu"><i></i><i></i></button>
+</div>
+</header>
+<main id="top">
+<section aria-label="Cellfie 소개" aria-roledescription="carousel" class="hero" data-aria-label-en="About Cellfie">
+<div class="slide on"><div class="bg"></div></div>
+<div class="slide"><div class="bg"></div></div>
+<div class="slide"><div class="bg"></div></div>
+<div class="device">
+<div class="frame"><div class="screen">
+<img alt="피부 점수 추이와 강점이 보이는 분석 화면" class="on" data-alt-en="Analysis screen with a skin score trend and strengths" data-src-en="assets/en/analysis.jpg" src="assets/ko/analysis.jpg"/>
+<img alt="처음 사진과 최근 사진을 비교해 +19점이 보이는 홈 화면" data-alt-en="Home screen comparing the first and latest skin photos, +19 points" data-src-en="assets/en/home.jpg" src="assets/ko/home.jpg"/>
+<img alt="비타민C 세럼이 나한테 맞는 이유가 보이는 제품 화면" data-alt-en="Product screen explaining why a vitamin C serum suits you" data-src-en="assets/en/pick.jpg" src="assets/ko/pick.jpg"/>
+</div></div>
+</div>
+<div class="hero-foot">
+<div class="inner">
+<div class="hero-row">
+<div aria-live="polite" class="hero-text">
+<h1 class="display on"><span class="ln"><span>Selfie to</span></span><span class="ln"><span>Skin Score</span></span></h1>
+<h1 aria-hidden="true" class="display"><span class="ln"><span>Your Skin,</span></span><span class="ln"><span>On Record</span></span></h1>
+<h1 aria-hidden="true" class="display"><span class="ln"><span>Picks With</span></span><span class="ln"><span>a Reason</span></span></h1>
+</div>
+<div class="hero-tabs" role="tablist">
+<button aria-selected="true" class="pill" role="tab"><span data-l="ko">피부 분석</span><span data-l="en">Analysis</span></button>
+<button aria-selected="false" class="pill" role="tab"><span data-l="ko">피부 기록</span><span data-l="en">Record</span></button>
+<button aria-selected="false" class="pill" role="tab"><span data-l="ko">맞춤 추천</span><span data-l="en">Picks</span></button>
+</div>
+</div>
+<div class="bar"><i id="bar"></i><span class="count"><b id="cur">01</b> / 03</span></div>
+</div>
+</div>
+</section>
+<section aria-label="서비스" class="services inner" data-aria-label-en="Features" id="service">
+<article class="sol" style="--i:0">
+<span class="label">Analysis</span>
+<div>
+<h2 class="title">Skin Analysis</h2>
+<p><span data-l="ko">셀카 한 장으로 수분·유분·주름·피부톤·트러블·모공·홍조를 점수로 보여줍니다.<br/>측정기 없이 휴대폰 카메라면 충분합니다.</span><span data-l="en">One selfie scores hydration, oil, wrinkles, tone, breakouts, pores and redness.<br/>No device needed. Your phone camera is enough.</span></p>
+</div>
+<figure><img alt="" data-src-en="assets/en/analysis.jpg" loading="lazy" src="assets/ko/analysis.jpg"/></figure>
+</article>
+<article class="sol" style="--i:1">
+<span class="label">Record</span>
+<div>
+<h2 class="title">Skin Record</h2>
+<p><span data-l="ko">날짜별 점수가 그래프로 쌓이고, 제품을 쓰기 시작한 날과 멈춘 날이 함께 표시됩니다.<br/>어떤 제품이 맞았는지 기록으로 확인합니다.</span><span data-l="en">Your scores build into a trend line, with the days you started and stopped each product marked on it.<br/>See which products actually worked.</span></p>
+</div>
+<figure><img alt="" data-src-en="assets/en/home.jpg" loading="lazy" src="assets/ko/home.jpg"/></figure>
+</article>
+<article class="sol" style="--i:2">
+<span class="label">Recommendation</span>
+<div>
+<h2 class="title">Reasoned Picks</h2>
+<p><span data-l="ko">분석 결과와 문진, 예산을 함께 보고 루틴과 제품, 성분을 제안합니다.<br/>추천마다 이유와 근거 신뢰도를 밝힙니다.</span><span data-l="en">Routines, products and ingredients picked from your results, skin survey and budget.<br/>Every pick shows its reason and how strong the evidence is.</span></p>
+<a class="play" href="https://play.google.com/store/apps/details?id=cellfie.app" rel="noopener" target="_blank"><span data-l="ko">Google Play에서 보기</span><span data-l="en">Get it on Google Play</span></a>
+</div>
+<figure><img alt="" data-src-en="assets/en/routine.jpg" loading="lazy" src="assets/ko/routine.jpg"/></figure>
+</article>
+<div class="sol-end"></div>
+</section>
+<section class="band" id="why">
+<div class="inner">
+<div class="band-top">
+<div><span class="label on-dark">Why Cellfie</span><h2 class="title fx" style="margin-top:22px">Ranked for Them,<br/>Recorded for You</h2></div>
+<div class="fx">
+<p><span data-l="ko">인기 순위와 리뷰로는 그 제품이 내 피부에 맞는지 알 수 없습니다. Cellfie는 내 피부가 실제로 어떻게 변했는지에서 추천을 시작합니다.</span><span data-l="en">Rankings and reviews can't tell you whether a product suits your skin. Cellfie starts from how your skin actually changed.</span></p>
+</div>
+</div>
+<div class="cmp-wrap">
+<table class="cmp">
+<thead><tr><th scope="col"><span class="sr"><span data-l="ko">기능</span><span data-l="en">Feature</span></span></th><th class="me" scope="col">Cellfie</th><th scope="col"><span data-l="ko">A<small>리뷰·랭킹형 화장품 앱</small></span><span data-l="en">A<small>Review &amp; ranking apps</small></span></th><th scope="col"><span data-l="ko">B<small>AI 피부 분석 앱</small></span><span data-l="en">B<small>AI skin scanner apps</small></span></th><th scope="col"><span data-l="ko">C<small>브랜드 자사 진단</small></span><span data-l="en">C<small>Brand skin diagnosis</small></span></th></tr></thead>
+<tbody>
+<tr class="fx"><th scope="row"><span data-l="ko">셀카 한 장으로 항목별 피부 점수<small>휴대폰 카메라만으로 7개 항목</small></span><span data-l="en">Skin scores from one selfie<small>7 measures, phone camera only</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="h"><i>◐</i><span class="sr"><span data-l="ko">일부</span><span data-l="en">Partly</span></span></td></tr>
+<tr class="fx"><th scope="row"><span data-l="ko">날짜별 피부 변화 기록<small>같은 항목을 주 단위로 비교</small></span><span data-l="en">Day-by-day skin record<small>Compare the same measure week to week</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="h"><i>◐</i><span class="sr"><span data-l="ko">일부</span><span data-l="en">Partly</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td></tr>
+<tr class="fx"><th scope="row"><span data-l="ko">제품 사용 기간과 피부 변화 연결<small>시작·중단 시점을 그래프에 표시</small></span><span data-l="en">Product use linked to skin change<small>Start and stop dates on the chart</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td></tr>
+<tr class="fx"><th scope="row"><span data-l="ko">추천 이유와 근거 신뢰도 공개<small>추천마다 왜 맞는지 설명</small></span><span data-l="en">A reason and evidence level for each pick<small>Why it suits you, every time</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="h"><i>◐</i><span class="sr"><span data-l="ko">일부</span><span data-l="en">Partly</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td></tr>
+<tr class="fx"><th scope="row"><span data-l="ko">특정 브랜드에 묶이지 않는 추천<small>자사 제품 판매 목적 없음</small></span><span data-l="en">Picks not tied to one brand<small>We don't sell our own products</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="h"><i>◐</i><span class="sr"><span data-l="ko">일부</span><span data-l="en">Partly</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td></tr>
+<tr class="fx"><th scope="row"><span data-l="ko">전성분표 촬영으로 화장대 등록<small>성분 자동 인식, 루틴 정리</small></span><span data-l="en">Scan an ingredient list to add a product<small>Ingredients read automatically</small></span></th><td class="me y"><i>●</i><span class="sr"><span data-l="ko">제공</span><span data-l="en">Yes</span></span></td><td class="h"><i>◐</i><span class="sr"><span data-l="ko">일부</span><span data-l="en">Partly</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td><td class="n"><i>—</i><span class="sr"><span data-l="ko">없음</span><span data-l="en">No</span></span></td></tr>
+</tbody>
+</table>
+</div>
+<p class="cmp-note"><span data-l="ko">● 제공   ◐ 일부 제공   — 제공하지 않음  ·  A·B·C는 국내 출시 서비스를 유형별로 묶은 것으로, 각 유형 대표 서비스의 기본 기능 기준입니다 (2026년 10월).</span><span data-l="en">● Yes   ◐ Partly   — No  ·  A, B and C group services on the market by type. Marks reflect the core features of a typical app of each type (October 2026).</span></p>
+</div>
+</section>
+<section class="sec inner" id="news">
+<div class="grid2 sec-head">
+<span class="label">News</span>
+<h2 class="title fx">Newsroom</h2>
+</div>
+<div class="grid2">
+<ol class="news-list">
+<li class="news fx"><time datetime="2026-10-01"><span data-l="ko">2026. 10. 01</span><span data-l="en">Oct 1, 2026</span></time><div><h3><span data-l="ko">트러블 점수 산출 방식 개편</span><span data-l="en">Breakout score, recalculated</span></h3><p><span data-l="ko">병변 개수를 기준으로 점수를 다시 계산합니다. 개수가 적은 구간의 작은 변화까지 점수에 드러납니다.</span><span data-l="en">Breakout scores are now based on lesion count, so small changes at low counts show up in your score.</span></p></div></li>
+<li class="news fx"><time datetime="2026-08-16"><span data-l="ko">2026. 08. 16</span><span data-l="en">Aug 16, 2026</span></time><div><h3><span data-l="ko">피부 분석 모델 교체</span><span data-l="en">New skin analysis model</span></h3><p><span data-l="ko">더 정밀한 분석 모델을 운영 서버에 적용했습니다.</span><span data-l="en">A more precise analysis model is now live on our servers.</span></p></div></li>
+</ol>
+</div>
+</section>
+<section class="sec inner" id="privacy">
+<div class="grid2 sec-head">
+<span class="label">Privacy</span>
+<div>
+<h2 class="title fx">Privacy by Design</h2>
+<p class="fx"><span data-l="ko">얼굴 사진에서는 피부 상태 점수만 계산합니다. 개인을 알아보는 얼굴 특징 정보는 추출하지도 저장하지도 않습니다.</span><span data-l="en">From your face photo we calculate skin condition scores only. We never extract or store facial features that could identify you.</span></p>
+</div>
+</div>
+<div class="grid2">
+<div class="principles">
+<div class="pr fx"><h3><span data-l="ko">사진을 남기지 않습니다</span><span data-l="en">Photos aren't kept</span></h3><p><span data-l="ko">분석이 끝나면 원본 사진을 바로 지웁니다. 전송 구간은 암호화합니다.</span><span data-l="en">The original photo is deleted as soon as analysis finishes. Uploads are encrypted in transit.</span></p></div>
+<div class="pr fx"><h3><span data-l="ko">학습과 광고에 쓰지 않습니다</span><span data-l="en">Never used for training or ads</span></h3><p><span data-l="ko">이용자 사진은 모델 학습, 개인 식별, 광고, 제3자 제공에 쓰지 않습니다.</span><span data-l="en">Your photos are never used for model training, identification or advertising, and never shared with third parties.</span></p></div>
+<div class="pr fx"><h3><span data-l="ko">추적하지 않습니다</span><span data-l="en">No tracking</span></h3><p><span data-l="ko">광고 식별자와 분석용 쿠키를 쓰지 않습니다.</span><span data-l="en">No advertising IDs and no analytics cookies.</span></p></div>
+<div class="pr fx"><h3><span data-l="ko">진단하지 않습니다</span><span data-l="en">Not a diagnosis</span></h3><p><span data-l="ko">Cellfie는 화장품 선택을 돕는 기록 서비스이며 의료적 진단을 하지 않습니다.</span><span data-l="en">Cellfie is a skin record that helps you choose skincare. It does not provide medical diagnosis.</span></p>
+<a class="policy-link" href="https://glaze-frost-837.notion.site/Cellfie-3a793068735680d4b95bf8c458c2cb9d" rel="noopener" target="_blank"><span data-l="ko">개인정보 처리방침 전문</span><span data-l="en">Read the full privacy policy</span></a></div>
+</div>
+</div>
+</section>
+<section class="join" id="contact">
+<div class="inner grid2">
+<span class="label">Partnership</span>
+<div class="join-body fx">
+<div>
+<h2 class="title">Work With Us</h2>
+<p><span data-l="ko">화장품 브랜드, 피부 연구 기관과의 협업 제안을 받습니다.</span><span data-l="en">We welcome proposals from skincare brands and skin research teams.</span></p>
+</div>
+<div class="join-act"><span class="addr">support@cellfie.me</span><a class="pill" data-href-en="mailto:support@cellfie.me?subject=Partnership" href="mailto:support@cellfie.me?subject=%5B%EC%A0%9C%ED%9C%B4%5D"><span data-l="ko">제휴 문의</span><span data-l="en">Contact us</span></a></div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="inner">
+<div class="foot-links">
+<a href="https://glaze-frost-837.notion.site/Cellfie-3a793068735680d4b95bf8c458c2cb9d" rel="noopener" target="_blank"><span data-l="ko">개인정보 처리방침</span><span data-l="en">Privacy Policy</span></a>
+<a href="#service"><span data-l="ko">서비스</span><span data-l="en">Features</span></a>
+<a href="#contact"><span data-l="ko">제휴 문의</span><span data-l="en">Partnership</span></a>
+<a href="https://play.google.com/store/apps/details?id=cellfie.app" rel="noopener" target="_blank">Google Play</a>
+</div>
+<div class="foot-info"><span data-l="ko">
+      Cellfie<br/>
+      문의 support@cellfie.me<br/>
+      © 2026 Cellfie. All rights reserved.
+    </span><span data-l="en">
+      Cellfie<br/>
+      Contact support@cellfie.me<br/>
+      © 2026 Cellfie. All rights reserved.
+    </span></div>
+</div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>
