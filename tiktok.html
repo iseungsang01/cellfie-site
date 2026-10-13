@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title>Cellfie 릴스 게시 관리</title>
+<link href="assets/icon.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet"/>
+<style>
+  body { margin: 0; background: #fff; color: #111311; font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+  header { border-bottom: 1px solid #E3E6DF; }
+  header .inner, main { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  header .inner { height: 64px; display: flex; align-items: center; }
+  header a { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; font-weight: 700; }
+  header img { width: 28px; height: 28px; }
+  main { padding: 32px 16px 80px; }
+  h1 { font-size: 24px; margin: 0 0 20px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  button, .btn { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid #5E7F2E; background: #88B04B; color: #fff; cursor: pointer; text-decoration: none; }
+  button.alt { background: #fff; color: #5E7F2E; }
+  button:disabled { opacity: .5; cursor: default; }
+  input { font: inherit; padding: 8px 10px; border: 1px solid #E3E6DF; border-radius: 8px; width: 100%; box-sizing: border-box; }
+  pre { background: #F6F7F4; padding: 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-all; font-size: 13px; }
+  .ok { color: #5E7F2E; font-weight: 700; } .bad { color: #B3261E; font-weight: 700; }
+  .muted { color: #8B9187; font-size: 13px; }
+</style>
+</head>
+<body>
+<header><div class="inner"><a href="./"><img alt="" src="assets/icon.png"/>Cellfie</a></div></header>
+<main>
+<h1>릴스 게시 관리 · Reels publisher</h1>
+<p class="muted">Google Drive 의 <b>1_대기</b> 폴더에 올라온 영상을 매일 한 건씩 Instagram 과 TikTok 에 게시하는 내부 도구입니다.</p>
+
+<label>관리 비밀값 (UPLOAD_SECRET)<input id="secret" type="password" autocomplete="off"/></label>
+<div class="row">
+  <button id="load">불러오기 · Load</button>
+</div>
+
+<div id="panel" hidden>
+  <p>TikTok: <span id="tt"></span></p>
+  <div class="row">
+    <a class="btn" id="connect" href="#" hidden>TikTok 계정 연결 · Connect TikTok</a>
+    <button class="alt" id="setup">폴더·트리거 설치 · Setup</button>
+    <button id="publish">지금 게시 · Publish now</button>
+    <button class="alt" id="status">상태 새로고침 · Refresh</button>
+  </div>
+  <h3>상태 · Status</h3>
+  <pre id="out">-</pre>
+</div>
+<p id="msg"></p>
+</main>
+<script>
+(function () {
+  var API = 'https://script.google.com/macros/s/AKfycbxdpkX7oLkfU2oN8maTApMcwbNRyUG9y7CfDklhMXUHfq8nJ2Wqel-tWDKvatUOVT0y/exec';
+  var $ = function (id) { return document.getElementById(id); };
+  var secret = '';
+  try { secret = localStorage.getItem('cellfie_secret') || ''; } catch (e) {}
+  $('secret').value = secret;
+
+  function say(html, cls) { $('msg').innerHTML = html; $('msg').className = cls || ''; }
+  function call(params) {
+    var q = Object.keys(params).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch(API + '?' + q).then(function (r) { return r.json(); });
+  }
+  function render(d) {
+    if (!d.ok) { say('오류: ' + d.error, 'bad'); return; }
+    $('panel').hidden = false;
+    if ('connected' in d) {
+      $('tt').innerHTML = d.connected ? '<span class="ok">연결됨 · connected</span>' : '<span class="bad">미연결 · not connected</span>';
+      $('connect').hidden = !d.authorize;
+      $('connect').href = d.authorize || '#';
+    }
+    $('out').textContent = JSON.stringify({
+      inflight: d.inflight, lastPosted: d.lastPosted, pending: d.pending,
+    }, null, 2);
+    if (d.did === 'setup') say('setup 완료: 폴더와 트리거가 준비되었습니다.', 'ok');
+    if (d.did === 'publish') say('게시 시작. 플랫폼 처리가 끝나면 몇 분 뒤 완료됩니다. 상태를 새로고침하세요.', 'ok');
+  }
+  function run(action) {
+    secret = $('secret').value.trim();
+    if (!secret) { say('비밀값을 넣으세요.', 'bad'); return; }
+    try { localStorage.setItem('cellfie_secret', secret); } catch (e) {}
+    say('요청 중…');
+    var params = { secret: secret };
+    if (action) params.action = action;
+    call(params).then(function (d) { if (d.ok && !d.did) say(''); render(d); })
+      .catch(function (e) { say('요청 실패: ' + e, 'bad'); });
+  }
+  $('load').onclick = function () { run(''); };
+  $('setup').onclick = function () { run('setup'); };
+  $('publish').onclick = function () { run('publish'); };
+  $('status').onclick = function () { run('status'); };
+
+  // TikTok 로그인에서 돌아온 경우: code 를 Apps Script 로 넘겨 토큰을 받는다.
+  var u = new URL(location.href);
+  var code = u.searchParams.get('code'), state = u.searchParams.get('state');
+  if (code && state) {
+    history.replaceState(null, '', location.pathname);
+    say('TikTok 계정 연결 중…');
+    call({ code: code, state: state }).then(function (d) {
+      if (d.ok) {
+        say('TikTok 계정 연결 완료: @' + d.username + ' (공개 범위: ' + d.privacy.join(', ') + ')', 'ok');
+        $('secret').value = state; run('');
+      } else say('연결 실패: ' + d.error, 'bad');
+    }).catch(function (e) { say('연결 실패: ' + e, 'bad'); });
+  } else if (secret) run('');
+})();
+</script>
+</body>
+</html>
