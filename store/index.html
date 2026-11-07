@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" name="viewport"/>
+<title>피부 나이 테스트 · 올리브영 화해 아마존 랭킹 한곳에 | Cellfie 피부 상점</title>
+<meta name="description" content="셀카 한 장으로 무료 피부 나이 테스트. 올리브영 랭킹, 화해 랭킹, 아마존 뷰티 베스트, 뷰티 유튜버 채널을 3D 화장품 가게 안에서 한 번에. 가입 없이 바로." data-content-en="Free skin age test from one selfie. Olive Young, Hwahae and Amazon beauty rankings plus beauty YouTubers, all in one walkable 3D shop. No sign-up."/>
+<meta name="keywords" content="피부 나이 테스트, 피부나이, 피부 분석, 셀카 피부 측정, 올리브영 랭킹, 화해 랭킹, 아마존 뷰티, 뷰티 유튜버, 스킨케어 추천, skin age test"/>
+<link rel="canonical" href="https://cellfie.me/store/"/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Cellfie"/>
+<meta name="twitter:card" content="summary"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Cellfie 피부 상점","alternateName":"Cellfie Skin Shop","url":"https://cellfie.me/store/","applicationCategory":"LifestyleApplication","operatingSystem":"Web","inLanguage":["ko","en"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"description":"셀카 한 장으로 피부 나이를 재는 무료 테스트와 올리브영·화해·아마존 랭킹, 뷰티 유튜버 채널을 한곳에 모은 3D 화장품 가게.","publisher":{"@type":"Organization","name":"Cellfie","url":"https://cellfie.me/"}}
+</script>
+<meta property="og:title" content="내 피부는 몇 살? Cellfie 피부 상점" data-content-en="How old is my skin? Cellfie Skin Shop"/>
+<meta property="og:description" content="셀카 한 장 피부 나이 테스트, 올리브영·화해·아마존 랭킹, 뷰티 유튜버까지 한곳에. 가입 없이 무료." data-content-en="Selfie skin age test, beauty rankings and YouTubers in one place. Free, no sign-up."/>
+<meta property="og:image" content="https://cellfie.me/assets/icon.png"/>
+<meta property="og:url" content="https://cellfie.me/store/"/>
+<meta name="theme-color" content="#E9E4D8"/>
+<link href="../assets/icon.png" rel="icon"/>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet"/>
+<link href="store.css" rel="stylesheet"/>
+<meta name="google-adsense-account" content="ca-pub-8449272316054814"/>
+<script async data-ad-frequency-hint="60s" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8449272316054814" crossorigin="anonymous"></script>
+<script>
+  // AdSense 게임용 광고(Ad Placement API). 측정 부스에 들어가기 전에 adBreak 를 한 번 부른다.
+  window.adsbygoogle = window.adsbygoogle || [];
+  window.adBreak = window.adConfig = function (o) { window.adsbygoogle.push(o); };
+  window.adConfig({ preloadAdBreaks: "on", sound: "off" });
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="game" aria-label="Cellfie 피부 상점"></canvas>
+  <header class="hud">
+    <a class="home" href="../" aria-label="cellfie.me"><img alt="" src="../assets/icon.png"/></a>
+    <span class="zone" id="zone">Cellfie</span>
+    <span class="pill room" id="room" hidden></span>
+    <button class="pill" id="btn-look" type="button"><span data-l="ko">꾸미기</span><span data-l="en">Style</span></button>
+    <button class="pill" id="btn-lang" type="button">EN</button>
+  </header>
+  <div class="masktime" id="masktime" hidden><span id="mt-text"></span><button id="mt-btn" type="button"></button></div>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <div class="loading" id="loading"><span data-l="ko">상점 문 여는 중…</span><span data-l="en">Opening the shop…</span></div>
+  <nav class="quick" aria-label="바로가기">
+    <button id="q-scan" type="button"><b>🔬</b><span data-l="ko">피부 측정</span><span data-l="en">Skin scan</span></button>
+    <button id="q-rank" type="button"><b>🛍️</b><span data-l="ko">랭킹 모음</span><span data-l="en">Rankings</span></button>
+    <button id="q-tv" type="button"><b>📺</b><span data-l="ko">뷰티 TV</span><span data-l="en">Beauty TV</span></button>
+    <button id="q-app" type="button"><b>📱</b><span data-l="ko">앱 받기</span><span data-l="en">Get app</span></button>
+  </nav>
+  <div class="dialog idle" id="dialog">
+    <p class="who" id="dlg-who"></p>
+    <p class="text" id="dlg-text"></p>
+    <div class="choices" id="dlg-choices"></div>
+  </div>
+</div>
+
+<noscript>
+  <h1>Cellfie 피부 상점: 피부 나이 테스트와 뷰티 랭킹 한곳에</h1>
+  <p>셀카 한 장으로 피부 나이와 수분·유분·주름·피부톤·트러블·모공·홍조·탄력 8가지 점수를 무료로 재 볼 수 있습니다. 올리브영 랭킹, 화해 랭킹, 올리브영 글로벌, 아마존 스킨케어·뷰티 베스트셀러와 뷰티 유튜버 채널로 바로 갈 수 있습니다. 이 페이지는 자바스크립트를 켜야 열립니다.</p>
+</noscript>
+
+<!-- 첫 방문 안내 -->
+<div class="modal" id="m-welcome" hidden>
+  <div class="sheet welcome">
+    <h1 class="w-title"><span data-l="ko">Cellfie 피부 상점</span><span data-l="en">Cellfie Skin Shop</span></h1>
+    <p class="sub"><span data-l="ko">천천히 걸어 다니는 3D 화장품 가게예요. 가입 없이 바로 둘러볼 수 있어요.</span><span data-l="en">A calm 3D skincare shop to stroll around. No sign-up.</span></p>
+    <ul class="w-list">
+      <li><b>🔬</b><span><span data-l="ko"><strong>피부 나이 테스트</strong> · 가운데 SKIN SCAN 부스에서 셀카 한 장</span><span data-l="en"><strong>Skin age test</strong> · one selfie at the SKIN SCAN booth</span></span></li>
+      <li><b>🛍️</b><span><span data-l="ko"><strong>랭킹 코너</strong> · 올리브영·화해·아마존 랭킹을 선반에서 바로</span><span data-l="en"><strong>Ranking corners</strong> · Olive Young, Hwahae, Amazon in one tap</span></span></li>
+      <li><b>📺</b><span><span data-l="ko"><strong>뷰티 TV</strong> · 인기 뷰티 유튜버 채널 모음</span><span data-l="en"><strong>Beauty TV</strong> · popular beauty YouTubers</span></span></li>
+      <li><b>👋</b><span><span data-l="ko"><strong>같이 둘러보기</strong> · 같은 매장 손님에게 인사, 소파에서 쉬기</span><span data-l="en"><strong>Together</strong> · wave at other visitors, rest on the sofa</span></span></li>
+    </ul>
+    <p class="hint"><span data-l="ko">바닥을 누르면 걷고, 물건이나 사람을 누르면 말을 걸어요.</span><span data-l="en">Tap the floor to walk, tap things or people to interact.</span></p>
+    <button class="btn" data-close type="button"><span data-l="ko">둘러보기</span><span data-l="en">Start</span></button>
+  </div>
+</div>
+
+<!-- 뷰티 TV -->
+<div class="modal" id="m-tv" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2><span data-l="ko">뷰티 TV</span><span data-l="en">Beauty TV</span></h2>
+    <p class="sub"><span data-l="ko">인기 뷰티 유튜버 채널로 바로 가요. Cellfie와 제휴 관계가 없는 외부 채널이에요.</span><span data-l="en">Jump to popular beauty YouTube channels. External channels, not affiliated with Cellfie.</span></p>
+    <p class="label"><span data-l="ko">한국</span><span data-l="en">Korea</span></p>
+    <div class="rows" id="tv-ko"></div>
+    <p class="label"><span data-l="ko">해외</span><span data-l="en">Global</span></p>
+    <div class="rows" id="tv-en"></div>
+  </div>
+</div>
+
+<!-- 앱 받기 -->
+<div class="modal" id="m-app" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2><span data-l="ko">Cellfie 앱 받기</span><span data-l="en">Get the Cellfie app</span></h2>
+    <p class="sub"><span data-l="ko">매일 한 장 찍으면, 바르는 제품이 내 피부에 맞는지 기록으로 보여 줘요.</span><span data-l="en">One photo a day shows whether your products actually work for your skin.</span></p>
+    <a class="store-btn" id="app-play" href="#" rel="noopener" target="_blank"><b>▶</b><span><small>GET IT ON</small>Google Play</span></a>
+    <a class="store-btn" id="app-apple" href="#" rel="noopener" target="_blank"><b></b><span><small>Download on the</small>App Store <em class="kr-only" data-l="ko">한국</em><em class="kr-only" data-l="en">Korea only</em></span></a>
+  </div>
+</div>
+
+<!-- 랭킹 모음 -->
+<div class="modal" id="m-corners" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2><span data-l="ko">랭킹 모음</span><span data-l="en">All rankings</span></h2>
+    <p class="sub"><span data-l="ko">걸어가지 않아도 여기서 바로 열 수 있어요.</span><span data-l="en">Open any corner right here without walking.</span></p>
+    <div class="corners" id="corner-list"></div>
+    <p class="fine disclaimer"><span data-l="ko">올리브영·화해·아마존은 각 회사의 상표이며, Cellfie는 이들과 제휴 관계가 없습니다.</span><span data-l="en">Olive Young, Hwahae, and Amazon are trademarks of their owners. Cellfie is not affiliated with them.</span></p>
+  </div>
+</div>
+
+<!-- 피부 측정 부스 -->
+<div class="modal" id="m-booth" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <section id="booth-start">
+      <h2><span data-l="ko">피부 측정 부스</span><span data-l="en">Skin Booth</span></h2>
+      <p class="sub"><span data-l="ko">셀카 한 장으로 피부 나이와 8가지 점수를 재요. 기준은 실제로 측정한 1,400여 명의 데이터예요.</span><span data-l="en">One selfie gives your skin age and 8 scores, based on measured data from about 1,400 people.</span></p>
+      <p class="label"><span data-l="ko">실제 나이대</span><span data-l="en">Your age group</span></p>
+      <div class="chips" id="decades">
+        <button type="button" data-decade="10"><span data-l="ko">10대</span><span data-l="en">Teens</span></button>
+        <button type="button" data-decade="20"><span data-l="ko">20대</span><span data-l="en">20s</span></button>
+        <button type="button" data-decade="30"><span data-l="ko">30대</span><span data-l="en">30s</span></button>
+        <button type="button" data-decade="40"><span data-l="ko">40대</span><span data-l="en">40s</span></button>
+        <button type="button" data-decade="50"><span data-l="ko">50대</span><span data-l="en">50s</span></button>
+        <button type="button" data-decade="60"><span data-l="ko">60대+</span><span data-l="en">60+</span></button>
+      </div>
+      <dl class="notice">
+        <dt><span data-l="ko">수집 항목</span><span data-l="en">What we collect</span></dt><dd><span data-l="ko">얼굴 사진 1장, 선택한 나이대</span><span data-l="en">One face photo and the age group you pick</span></dd>
+        <dt><span data-l="ko">이용 목적</span><span data-l="en">Purpose</span></dt><dd><span data-l="ko">피부 점수와 피부 나이 계산</span><span data-l="en">Calculating skin scores and skin age</span></dd>
+        <dt><span data-l="ko">보유 기간</span><span data-l="en">Retention</span></dt><dd><span data-l="ko">사진은 분석 직후 바로 삭제(저장하지 않음). 나이대별 점수 구간 인원 수만 익명으로 남아요.</span><span data-l="en">The photo is deleted right after analysis and never stored. Only anonymous head counts per age group and score range remain.</span></dd>
+        <dt><span data-l="ko">거부할 권리</span><span data-l="en">Your choice</span></dt><dd><span data-l="ko">동의하지 않아도 돼요. 거부하면 피부 측정만 이용할 수 없고, 상점의 다른 기능은 그대로 쓸 수 있어요.</span><span data-l="en">You may decline. You just won't be able to use the skin check; everything else in the shop still works.</span></dd>
+      </dl>
+      <label class="consent"><input id="consent" type="checkbox"/><span><span data-l="ko">위 내용과 <a href="../privacy.html" target="_blank">개인정보 처리방침</a>에 동의하며, 만 14세 이상이고 본인 얼굴을 찍어요.</span><span data-l="en">I agree to the above and the <a href="../privacy.html" target="_blank">privacy policy</a>, I'm 14 or older, and this is my own face.</span></span></label>
+      <div class="row2">
+        <button class="btn" id="cam-open" type="button" aria-disabled="true"><span data-l="ko">카메라로 찍기</span><span data-l="en">Use camera</span></button>
+        <label class="btn ghost" id="pick" aria-disabled="true"><input accept="image/*" id="photo" type="file"/><span data-l="ko">사진 고르기</span><span data-l="en">Choose photo</span></label>
+      </div>
+      <p class="err" id="booth-err" hidden></p>
+    </section>
+    <section id="booth-cam" hidden>
+      <div class="cam">
+        <video id="cam-video" autoplay muted playsinline></video>
+        <div class="oval" aria-hidden="true"></div>
+        <div class="count" id="cam-count" aria-live="polite"></div>
+        <div class="flash" id="flash" aria-hidden="true"></div>
+      </div>
+      <p class="hint"><span data-l="ko">얼굴을 타원 안에 맞추고, 밝은 곳에서 정면으로 찍어 주세요.</span><span data-l="en">Fit your face in the oval and face the camera in good light.</span></p>
+      <button class="shutter" id="cam-shot" type="button" aria-label="촬영"></button>
+      <button class="btn ghost" id="cam-cancel" type="button"><span data-l="ko">취소</span><span data-l="en">Cancel</span></button>
+    </section>
+    <section id="booth-wait" hidden>
+      <div class="scan" aria-hidden="true"></div>
+      <p class="center"><span data-l="ko">피부를 읽는 중…</span><span data-l="en">Reading your skin…</span></p>
+    </section>
+    <section id="booth-result" hidden>
+      <p class="label"><span data-l="ko">내 피부 나이</span><span data-l="en">My skin age</span></p>
+      <p class="age"><b id="r-age">–</b><span data-l="ko">세</span></p>
+      <p class="compare" id="r-compare"></p>
+      <ul class="bars" id="r-bars"></ul>
+      <p class="legend"><i class="me"></i><span data-l="ko">나</span><span data-l="en">Me</span><i class="avg"></i><span id="r-avg"></span></p>
+      <p class="peers" id="r-peers"></p>
+      <p class="note" id="r-dark" hidden><span data-l="ko">사진이 어두워 점수가 흔들릴 수 있어요.</span><span data-l="en">The photo is dark; scores may be off.</span></p>
+      <button class="btn" id="r-share" type="button"><span data-l="ko">결과 공유하기</span><span data-l="en">Share result</span></button>
+      <button class="btn ghost" data-close type="button"><span data-l="ko">상점으로 돌아가기</span><span data-l="en">Back to the shop</span></button>
+      <a class="applink" href="https://play.google.com/store/apps/details?id=cellfie.app" rel="noopener" target="_blank"><img alt="" src="../assets/icon.png"/><span><b data-l="ko">피부는 매일 달라져요</b><b data-l="en">Your skin changes daily</b><small data-l="ko">Cellfie 앱으로 매일 한 장 찍고, 바르는 제품이 맞는지 기록으로 확인하세요.</small><small data-l="en">One photo a day in the Cellfie app shows whether your products work.</small></span></a>
+      <p class="fine"><span data-l="ko">피부 나이는 탄력·주름·피부톤이 어느 나이대 평균과 가장 닮았는지로 낸 재미용 지표예요. 진단이 아니에요.</span><span data-l="en">Skin age is a for-fun estimate, not a diagnosis.</span></p>
+    </section>
+  </div>
+</div>
+
+<!-- 꾸미기 -->
+<div class="modal" id="m-look" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2><span data-l="ko">내 캐릭터 꾸미기</span><span data-l="en">Style your character</span></h2>
+    <p class="sub"><span data-l="ko">같은 매장 손님들에게 이 모습과 이름으로 보여요:</span><span data-l="en">Other visitors see you like this, as:</span> <b id="lk-nick"></b></p>
+    <p class="label"><span data-l="ko">머리색</span><span data-l="en">Hair</span></p><div class="swatches" id="lk-hair"></div>
+    <p class="label"><span data-l="ko">옷</span><span data-l="en">Outfit</span></p><div class="swatches" id="lk-cloth"></div>
+    <p class="label"><span data-l="ko">소품</span><span data-l="en">Accessory</span></p><div class="chips" id="lk-acc"></div>
+    <button class="btn" data-close type="button"><span data-l="ko">완료</span><span data-l="en">Done</span></button>
+  </div>
+</div>
+
+<!-- 고민 게시판 -->
+<div class="modal" id="m-board" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2 id="b-title"></h2>
+    <a class="btn rank-link" id="b-link" href="#" rel="noopener" target="_blank"></a>
+    <p class="fine disclaimer"><span data-l="ko">올리브영·화해·아마존은 각 회사의 상표이며, Cellfie는 이들과 제휴 관계가 없습니다. 링크는 해당 회사의 외부 사이트로 연결됩니다.</span><span data-l="en">Olive Young, Hwahae, and Amazon are trademarks of their owners. Cellfie is not affiliated with them; links open their external sites.</span></p>
+    <p class="sub"><span data-l="ko">이 코너에 다녀간 사람들이 남긴 짧은 메모예요. 링크·연락처는 붙일 수 없어요.</span><span data-l="en">Short notes left by visitors to this corner. Links and contact info aren't allowed.</span></p>
+    <div class="today"><span data-l="ko">오늘의 질문</span><span data-l="en">Today's question</span><b id="b-question"></b></div>
+    <div class="compose">
+      <textarea id="b-body" maxlength="200" rows="3"></textarea>
+      <div class="compose-row"><span class="nick" id="b-nick"></span><span class="len" id="b-len">0/200</span><button class="send" id="b-send" type="button"><span data-l="ko">붙이기</span><span data-l="en">Post</span></button></div>
+      <p class="err" id="b-err" hidden></p>
+    </div>
+    <ul class="notes" id="b-list"></ul>
+    <p class="center" id="b-empty" hidden><span data-l="ko">아직 이야기가 없어요. 첫 메모를 붙여 보세요.</span><span data-l="en">No notes yet. Be the first.</span></p>
+  </div>
+</div>
+
+<script type="module" src="store.js"></script>
+</body>
+</html>
