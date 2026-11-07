@@ -1,7 +1,7 @@
-/* Cellfie 피부 상점(3D): 화면 전체가 상점이고, 위에 얇은 HUD, 아래에 말풍선 한 칸. */
+/* 셀피 라운지(3D): 화면 전체가 상점이고, 위에 얇은 HUD, 아래에 말풍선 한 칸. */
 :root {
-  --bg: #F3EEE6; --panel: rgba(255,253,246,.94); --ink: #1F2419; --ink-2: #5D6556; --line: #D9D4C6;
-  --brand: #88B04B; --brand-ink: #4F6E25; --danger: #B3261E;
+  --bg: #F7EEEB; --panel: rgba(255,253,246,.94); --ink: #1F2419; --ink-2: #5D6556; --line: #D9D4C6;
+  --brand: #88B04B; --brand-ink: #4F6E25; --rose: #D9879B; --danger: #B3261E;
   --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 * { box-sizing: border-box; }
@@ -162,6 +162,39 @@ button, textarea { font-family: inherit; }
 .w-list li { display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: start; font-size: 14px; line-height: 1.5; }
 .w-list li b { font-size: 20px; }
 .w-list strong { color: var(--ink); }
-@media (min-width: 700px) { .modal { align-items: center; } .sheet { border-radius: 22px; } }
+/* 넓은 화면: 창은 가운데가 아니라 오른쪽 옆 패널로. 라운지가 왼쪽에 그대로 보이게 배경은 옅게 */
+@media (min-width: 700px) {
+  .modal { align-items: stretch; justify-content: flex-end; background: rgba(20,24,16,.18); }
+  .sheet { max-width: 440px; height: 100dvh; max-height: 100dvh; border-radius: 22px 0 0 22px; padding: 28px 24px 32px; box-shadow: -12px 0 40px rgba(0,0,0,.10); animation: slide-in .28s cubic-bezier(.22,.61,.36,1); }
+  @keyframes slide-in { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
 
 .kr-only { font-style: normal; font-size: 11px; font-weight: 600; opacity: .7; margin-left: 4px; }
+
+/* 지점 고르기, 결과의 관리 포인트 */
+.pill.room { cursor: pointer; }
+.pill.room::after { content: " ▾"; font-size: 10px; }
+.rooms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.room-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 6px; border: 1px solid var(--line); border-radius: 14px; background: #FBF7F5; cursor: pointer; color: var(--ink); }
+.room-btn b { font-size: 16px; }
+.room-btn span { font-size: 12px; color: var(--ink-2); }
+.room-btn.on { border-color: var(--brand); background: #EEF4E4; }
+.focus { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: #FBF1EE; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+.focus b { color: var(--ink); }
+
+/* 성분 도서관 */
+.lib-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.lib-tabs button { border: 1px solid var(--line); background: #FBF7F5; border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink); }
+.lib-tabs button[aria-pressed="true"] { background: #9A7FD1; border-color: #9A7FD1; color: #fff; }
+.lib-list { display: grid; gap: 10px; }
+.ing { padding: 12px 14px; border-radius: 14px; background: #F8F5FB; }
+.ing b { font-size: 15px; }
+.ing p { margin: 4px 0 8px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+.ing a { display: block; margin-top: 4px; font-size: 11px; line-height: 1.5; color: #6B55A8; text-decoration: none; }
+.quick button { min-width: 56px; }
+.masktime[hidden], .toast[hidden] { display: none; }
+.quick button span { white-space: nowrap; }
+@media (max-width: 420px) { .quick { gap: 2px; padding: 5px; } .quick button { min-width: 0; padding: 6px 7px; font-size: 10.5px; } .quick button b { font-size: 18px; } }
+/* 대화 중엔 바로가기 바를 숨긴다(커진 말 상자와 겹치지 않게) */
+.quick { transition: opacity .2s; }
+.stage.talking .quick { opacity: 0; pointer-events: none; }
