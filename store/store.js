@@ -1,6 +1,7 @@
 // 셀피 라운지(3D). 정적 파일로 도는 1인용 가게이고, 서버는 세 군데에서만 부른다:
 // 측정 부스(/web/skin-test), 고민 게시판(/web/board), 익명 횟수(/web/stat).
 // 사진·점수는 어디에도 저장하지 않는다. 브라우저에는 언어·자동 닉네임·내 글 삭제 토큰만 둔다.
+// (로그인은 선택: api.cellfie.me 의 HttpOnly 쿠키라 이 페이지 스크립트는 읽을 수 없다.)
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
@@ -1398,7 +1399,10 @@ async function openMirror() {
     return;
   }
   try {
-    mirrorStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    // 권한 창이 떠 있는 동안 거울을 닫았으면 카메라를 바로 끈다(숨은 채 켜져 있지 않게)
+    if ($("m-mirror").hidden) { s.getTracks().forEach((t) => t.stop()); return; }
+    mirrorStream = s;
     $("mirror-video").srcObject = mirrorStream;
   } catch (e) {
     $("mirror-err").textContent = e && e.name === "NotAllowedError"
@@ -1426,7 +1430,9 @@ camBtn.addEventListener("click", async () => {
   boothError("");
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return boothError(L("이 브라우저는 카메라를 열 수 없어요. 사진 고르기로 해 주세요.", "This browser can't open the camera. Please choose a photo."));
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false });
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false });
+    if ($("m-booth").hidden) { s.getTracks().forEach((t) => t.stop()); return; }
+    stream = s;
     $("cam-video").srcObject = stream;
     $("cam-shot").disabled = false;
     boothView("cam");
@@ -1518,6 +1524,61 @@ function compareText(r) {
   if (Math.abs(d) < 3) return L("딱 또래 나이의 피부예요", "Right on par with your age group");
   return L(`또래보다 ${Math.abs(d)}살 ${d < 0 ? "어린" : "많은"} 피부예요`, `${Math.abs(d)} years ${d < 0 ? "younger" : "older"} than your age group`);
 }
+// ── Cellfie 계정 로그인(선택) ──
+// 비밀번호는 이 페이지에서 받지 않는다: 이 페이지에는 광고·CDN 스크립트가 같이 돌기 때문이다.
+// 로그인은 api.cellfie.me 의 로그인 창(외부 스크립트 없음)에서 하고, 토큰은 그쪽이 HttpOnly 쿠키로만 둔다.
+// 이 페이지는 토큰을 한 번도 보지 않고, 쿠키를 실어 닉네임·측정 요약만 받아 온다.
+const API_ORIGIN = new URL(API).origin;
+let acct = null; // { nickname, records, latestDate, latestScore }
+function renderAcct() {
+  const b = $("btn-acct");
+  b.classList.toggle("on", !!acct);
+  b.textContent = acct ? acct.nickname || L("내 계정", "Account") : L("로그인", "Log in");
+  $("acct-form").hidden = !!acct;
+  $("acct-in").hidden = !acct;
+  if (acct) {
+    $("acct-hi").textContent = L(`${acct.nickname || "Cellfie"}님, 반가워요`, `Hi, ${acct.nickname || "there"}`);
+    $("acct-n").textContent = L(`${acct.records}회`, `${acct.records}`);
+    $("acct-last").textContent = acct.latestScore != null ? L(`${acct.latestScore}점 · ${acct.latestDate}`, `${acct.latestScore} · ${acct.latestDate}`) : L("아직 없어요", "None yet");
+  }
+}
+async function loadAcct() {
+  try {
+    const r = await fetch(`${API}/web/me`, { credentials: "include", cache: "no-store" });
+    if (r.status === 401) acct = null;
+    else if (r.ok) acct = await r.json();
+  } catch (e) { /* 네트워크 오류면 다음 방문에 다시 본다 */ }
+  renderAcct();
+  if (lastResult) renderResult(lastResult);
+}
+$("btn-acct").addEventListener("click", () => { $("acct-err").hidden = true; renderAcct(); $("m-acct").hidden = false; stat("login_open"); });
+$("acct-go").addEventListener("click", () => {
+  const u = `${API}/web/login-page?lang=${lang}&origin=${encodeURIComponent(location.origin)}`;
+  // 이름 없는 새 창: 이름을 재사용하면 같은 페이지의 다른 스크립트가 그 창을 다른 주소로 바꿔치기할 수 있다
+  const w = window.open(u, "_blank", "popup,width=420,height=640");
+  if (!w) {
+    $("acct-err").textContent = L("팝업이 막혔어요. 팝업을 허용하고 다시 눌러 주세요.", "The popup was blocked. Allow popups and try again.");
+    $("acct-err").hidden = false;
+  }
+});
+// 로그인 창이 끝났다고 알려 줄 때만 다시 읽는다. 내용은 믿지 않고(토큰도 없다) 출처와 형식만 본다.
+window.addEventListener("message", (e) => {
+  if (e.origin !== API_ORIGIN || !e.data || e.data.type !== "cellfie-login") return;
+  loadAcct().then(() => { if (acct) { stat("login"); toast(L("로그인했어요", "Logged in")); } });
+});
+$("acct-out").addEventListener("click", async () => {
+  // 서버가 쿠키를 지웠을 때만 로그아웃으로 보인다(공용 PC 에서 "로그아웃된 줄 알았는데 남아 있는" 일을 막는다)
+  let ok = false;
+  try { ok = (await fetch(`${API}/web/logout`, { method: "POST", credentials: "include" })).ok; } catch (e) {}
+  if (!ok) { toast(L("로그아웃하지 못했어요. 다시 눌러 주세요.", "Couldn't log out. Please try again.")); return; }
+  acct = null; renderAcct();
+  if (lastResult) renderResult(lastResult);
+  toast(L("로그아웃했어요", "Logged out"));
+});
+$("acct-app").addEventListener("click", () => { $("m-acct").hidden = true; openApps(); });
+$("acct-scan").addEventListener("click", () => { $("m-acct").hidden = true; walkThen(10, 11, () => {}); });
+loadAcct();
+
 function renderResult(r) {
   $("r-age").textContent = r.skinAge ?? "–";
   $("r-compare").textContent = compareText(r);
@@ -1531,6 +1592,11 @@ function renderResult(r) {
   if (skin) {
     const tip = FOCUS_TIP[skin.worst] || FOCUS_TIP.hydration;
     $("r-focus").innerHTML = L(`관리 포인트 <b>${axisLabel(skin.worst)}</b> · 보통 ${tip[0]}을 많이 써요.`, `Focus: <b>${axisLabel(skin.worst)}</b> · people often use ${tip[1]}.`);
+  }
+  $("r-mine").hidden = !(acct && acct.latestScore != null);
+  if (acct && acct.latestScore != null) {
+    $("r-mine").textContent = L(`앱 최근 종합 점수 ${acct.latestScore}점(${acct.latestDate}). 같은 조명에서 매일 찍어야 변화가 보여요.`,
+      `Your latest app score: ${acct.latestScore} (${acct.latestDate}). Shoot daily in the same light to see change.`);
   }
   const ul = $("r-bars");
   ul.innerHTML = "";
@@ -1713,6 +1779,7 @@ function setLang(l) {
   updateHud();
   if (!dlg.open) closeDialog();
   if (lastResult) renderResult(lastResult);
+  renderAcct();
 }
 $("btn-lang").addEventListener("click", () => setLang(lang === "en" ? "ko" : "en"));
 let savedLang = null;

@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"/>
+<!-- CSP: 인라인 스크립트는 해시로만 허용한다. 인라인 스크립트(프레임 차단·광고 설정·importmap)를 고치면 해시를 다시 계산할 것 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-C/cB/EOiaeneE51JhkkyXBhuVyZ0wNx4yB99jXa0QJ0=' 'sha256-DYEdVBFHXDZmfy8TIRyluTS6W/ohRbiTJ23yumoa0h0=' 'sha256-yrk5OwB4smUwEHDFrEyl+xW3tNExgmz2767fe3ipdrQ=' https://cdn.jsdelivr.net/npm/three@0.160.0/ https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.gstatic.com https://*.adtrafficquality.google https://www.googletagservices.com; connect-src 'self' https://api.cellfie.me https://*.google.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/gh/orioncactus/; font-src https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; media-src 'self' blob:; frame-src https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; object-src 'none'; base-uri 'none'; form-action 'none'"/>
+<style id="antiframe">html{display:none}</style>
+<script>if(self===top){document.getElementById("antiframe").remove()}else{top.location=self.location}</script>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" name="viewport"/>
 <title>피부 나이 테스트 · 올리브영 화해 아마존 랭킹 한곳에 | 셀피 라운지</title>
 <meta name="description" content="셀카 한 장으로 무료 피부 나이 테스트. 올리브영 랭킹, 화해 랭킹, 아마존 뷰티 베스트, 뷰티 유튜버 채널을 3D 뷰티 라운지 안에서 한 번에. 가입 없이 바로." data-content-en="Free skin age test from one selfie. Olive Young, Hwahae and Amazon beauty rankings plus beauty YouTubers, all in one walkable 3D lounge. No sign-up."/>
@@ -21,7 +25,7 @@
 <meta name="theme-color" content="#E9E4D8"/>
 <link href="../assets/icon.png" rel="icon"/>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet"/>
-<link href="store.css?v=20261108b" rel="stylesheet"/>
+<link href="store.css?v=20261108e" rel="stylesheet"/>
 <meta name="google-adsense-account" content="ca-pub-8449272316054814"/>
 <script async data-ad-frequency-hint="60s" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8449272316054814" crossorigin="anonymous"></script>
 <script>
@@ -34,6 +38,10 @@
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+},
+  "integrity": {
+  "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js": "sha384-61S/Nu32S3E5+n+KpCOTb2eRYps6fVKm+9Gz1QBvSePFthb46f063Aa/qe/lykFZ",
+  "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js": "sha384-S52/WAm3DaIIFna675h5dmavqea/akLlPFtPdnzgWWhnz+/nMqR6PPsSXPOd8Gpw"
 } }
 </script>
 </head>
@@ -44,6 +52,7 @@
     <a class="home" href="../" aria-label="cellfie.me"><img alt="" src="../assets/icon.png"/></a>
     <span class="zone" id="zone">Cellfie</span>
     <button class="pill room" id="room" type="button" hidden></button>
+    <button class="pill acct" id="btn-acct" type="button"><span data-l="ko">로그인</span><span data-l="en">Log in</span></button>
     <button class="pill" id="btn-look" type="button"><span data-l="ko">꾸미기</span><span data-l="en">Style</span></button>
     <button class="pill" id="btn-lang" type="button">EN</button>
   </header>
@@ -82,6 +91,30 @@
     </ul>
     <p class="hint"><span data-l="ko">바닥을 누르면 걷고, 물건이나 사람을 누르면 말을 걸어요.</span><span data-l="en">Tap the floor to walk, tap things or people to interact.</span></p>
     <button class="btn" data-close type="button"><span data-l="ko">둘러보기</span><span data-l="en">Start</span></button>
+  </div>
+</div>
+
+<!-- Cellfie 계정 -->
+<div class="modal" id="m-acct" hidden>
+  <div class="sheet">
+    <button class="x" data-close type="button" aria-label="닫기">×</button>
+    <h2><span data-l="ko">Cellfie 계정</span><span data-l="en">Cellfie account</span></h2>
+    <div id="acct-form" class="acct-form">
+      <p class="sub"><span data-l="ko">Cellfie 앱에 이메일로 가입한 계정으로 로그인하면 앱 측정 기록 요약을 라운지에서 볼 수 있어요. 네이버·애플·구글·카카오로 가입한 계정은 아직 안 돼요.</span><span data-l="en">Log in with the email account you made in the Cellfie app to see your app record summary here. Accounts made with Naver, Apple, Google or Kakao aren't supported yet.</span></p>
+      <p class="err" id="acct-err" hidden></p>
+      <button class="btn" id="acct-go" type="button"><span data-l="ko">로그인 창 열기</span><span data-l="en">Open the login window</span></button>
+      <button class="btn ghost" id="acct-app" type="button"><span data-l="ko">아직 계정이 없어요 (앱 받기)</span><span data-l="en">No account yet (get the app)</span></button>
+      <p class="fine"><span data-l="ko">비밀번호는 이 페이지가 아니라 api.cellfie.me 로그인 창에서만 입력해요. 주소창이 api.cellfie.me 인지 확인하세요. 로그인 상태는 30일 동안 남고, 라운지에서 한 측정은 계정에 저장하지 않아요. 다른 손님에게는 계정 닉네임이 아니라 자동 닉네임이 보여요.</span><span data-l="en">You type your password only in the api.cellfie.me login window, never on this page. Check that the address bar says api.cellfie.me. The login lasts 30 days. Lounge scans are not saved to your account, and other visitors see your generated nickname, not your account name.</span></p>
+    </div>
+    <div id="acct-in" hidden>
+      <p class="acct-hi" id="acct-hi"></p>
+      <ul class="acct-sum">
+        <li><span data-l="ko">앱 측정 기록</span><span data-l="en">App records</span><b id="acct-n"></b></li>
+        <li><span data-l="ko">최근 종합 점수</span><span data-l="en">Latest overall score</span><b id="acct-last"></b></li>
+      </ul>
+      <button class="btn" id="acct-scan" type="button"><span data-l="ko">라운지에서 피부 나이 재 보기</span><span data-l="en">Check skin age in the lounge</span></button>
+      <button class="btn ghost" id="acct-out" type="button"><span data-l="ko">로그아웃</span><span data-l="en">Log out</span></button>
+    </div>
   </div>
 </div>
 
@@ -176,7 +209,7 @@
         <dt><span data-l="ko">보유 기간</span><span data-l="en">Retention</span></dt><dd><span data-l="ko">사진은 분석 직후 바로 삭제(저장하지 않음). 나이대별 점수 구간 인원 수만 익명으로 남아요.</span><span data-l="en">The photo is deleted right after analysis and never stored. Only anonymous head counts per age group and score range remain.</span></dd>
         <dt><span data-l="ko">거부할 권리</span><span data-l="en">Your choice</span></dt><dd><span data-l="ko">동의하지 않아도 돼요. 거부하면 피부 측정만 이용할 수 없고, 상점의 다른 기능은 그대로 쓸 수 있어요.</span><span data-l="en">You may decline. You just won't be able to use the skin check; everything else in the shop still works.</span></dd>
       </dl>
-      <label class="consent"><input id="consent" type="checkbox"/><span><span data-l="ko">위 내용과 <a href="../privacy.html" target="_blank">개인정보 처리방침</a>에 동의하며, 만 14세 이상이고 본인 얼굴을 찍어요.</span><span data-l="en">I agree to the above and the <a href="../privacy.html" target="_blank">privacy policy</a>, I'm 14 or older, and this is my own face.</span></span></label>
+      <label class="consent"><input id="consent" type="checkbox"/><span><span data-l="ko">위 내용과 <a href="../privacy.html" rel="noopener" target="_blank">개인정보 처리방침</a>에 동의하며, 만 14세 이상이고 본인 얼굴을 찍어요.</span><span data-l="en">I agree to the above and the <a href="../privacy.html" rel="noopener" target="_blank">privacy policy</a>, I'm 14 or older, and this is my own face.</span></span></label>
       <div class="row2">
         <button class="btn" id="cam-open" type="button" aria-disabled="true"><span data-l="ko">카메라로 찍기</span><span data-l="en">Use camera</span></button>
         <label class="btn ghost" id="pick" aria-disabled="true"><input accept="image/*" id="photo" type="file"/><span data-l="ko">사진 고르기</span><span data-l="en">Choose photo</span></label>
@@ -207,6 +240,7 @@
       <p class="peers" id="r-peers"></p>
       <p class="note" id="r-dark" hidden><span data-l="ko">사진이 어두워 점수가 흔들릴 수 있어요.</span><span data-l="en">The photo is dark; scores may be off.</span></p>
       <p class="focus" id="r-focus"></p>
+      <p class="mine" id="r-mine" hidden></p>
       <button class="btn" id="r-app" type="button"><span data-l="ko">Cellfie 앱에서 내 피부에 맞는 제품 추천받기</span><span data-l="en">Get picks for your skin in the Cellfie app</span></button>
       <button class="btn ghost" id="r-lib" type="button"><span data-l="ko">📚 성분 도서관에서 근거 논문까지 보기</span><span data-l="en">📚 See ingredients and studies in the library</span></button>
       <button class="btn ghost" id="r-share" type="button"><span data-l="ko">결과 공유하기</span><span data-l="en">Share result</span></button>
@@ -249,6 +283,6 @@
   </div>
 </div>
 
-<script type="module" src="store.js?v=20261108b"></script>
+<script type="module" src="store.js?v=20261108e"></script>
 </body>
 </html>

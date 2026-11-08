@@ -173,6 +173,13 @@ button, textarea { font-family: inherit; }
 
 /* 지점 고르기, 결과의 관리 포인트 */
 .pill.room { cursor: pointer; }
+.pill.acct.on { background: var(--ink); color: #fff; border-color: var(--ink); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acct-form .btn:first-of-type { margin-top: 14px; }
+.acct-hi { margin: 4px 0 12px; font-size: 16px; font-weight: 700; color: var(--ink); }
+.acct-sum { list-style: none; margin: 0 0 14px; padding: 0; border-top: 1px solid var(--line); }
+.acct-sum li { display: flex; justify-content: space-between; padding: 12px 2px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink-2); }
+.acct-sum b { color: var(--ink); }
+.mine { margin: 8px 0 0; font-size: 13px; color: var(--ink-2); }
 .pill.room::after { content: " ▾"; font-size: 10px; }
 .rooms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .room-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 6px; border: 1px solid var(--line); border-radius: 14px; background: #FBF7F5; cursor: pointer; color: var(--ink); }
@@ -198,3 +205,11 @@ button, textarea { font-family: inherit; }
 /* 대화 중엔 바로가기 바를 숨긴다(커진 말 상자와 겹치지 않게) */
 .quick { transition: opacity .2s; }
 .stage.talking .quick { opacity: 0; pointer-events: none; }
+
+/* 좁은 폰: 상단 알약이 넷(지점·로그인·꾸미기·언어)이라 구역 이름을 빼고 알약을 줄인다 */
+@media (max-width: 420px) {
+  .hud { gap: 6px; }
+  .hud .zone { visibility: hidden; }
+  .pill { padding: 6px 9px; }
+  .pill.acct.on { max-width: 76px; }
+}
